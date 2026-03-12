@@ -1,0 +1,746 @@
+//Elijah Oliver
+//SWE642 Assignment 1
+//October 11, 2025
+//This is my website for my SWE642
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Elijah's Website - SWE642 Assignment</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            padding-top: 60px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .profile-image {
+            border-radius: 50%;
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .greeting-message {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .form-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+        .success-message {
+            color: #28a745;
+            font-size: 0.875em;
+            margin-top: 5px;
+        }
+        .output-field {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #495057;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        #zipcode-message {
+            display: inline-block;
+            margin-left: 10px;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 30px;
+        }
+        .skill-card {
+            transition: transform 0.3s;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+        .change-name-link {
+            color: #ffc107;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Bootstrap Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><i class="fas fa-graduation-cap me-2"></i>Elijah's Portfolio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showTab('home'); return false;">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('about'); return false;">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('skills'); return false;">Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('survey'); return false;">Student Survey</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showTab('contact'); return false;">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <!-- Home Tab -->
+        <div id="home-tab" class="tab-content">
+            <div class="hero-section text-center">
+                <h1 class="display-3 mb-4">Welcome to My Homepage</h1>
+                <p class="lead">Elijah - Software Engineering Student at George Mason University</p>
+                <button class="btn btn-light btn-lg mt-3" onclick="showTab('about')">Learn More About Me</button>
+            </div>
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-4">
+                        <div class="card skill-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-code fa-3x text-primary mb-3"></i>
+                                <h5 class="card-title">Software Engineering</h5>
+                                <p class="card-text">Passionate about building efficient and scalable software solutions.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card skill-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-cloud fa-3x text-info mb-3"></i>
+                                <h5 class="card-title">Cloud Computing</h5>
+                                <p class="card-text">Experience with AWS and cloud-based architectures.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card skill-card">
+                            <div class="card-body text-center">
+                                <i class="fas fa-network-wired fa-3x text-success mb-3"></i>
+                                <h5 class="card-title">Networking</h5>
+                                <p class="card-text">IPv6 networking and systems administration expertise.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Tab -->
+        <div id="about-tab" class="tab-content" style="display:none;">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h1 class="mb-4">About Me</h1>
+                        <h5 class="text-muted mb-4">Hello! I'm Elijah, a graduate student at George Mason University with a love for technology and problem-solving.</h5>
+                        <p class="lead">I'm currently pursuing my master's degree in software engineering with experience in IPv6 Networking, cloud computing, and software testing. Throughout my coursework and personal projects, I've developed skills in various programming languages and technologies.</p>
+                        <p>I enjoy creating innovative solutions and learning about the latest trends in technology. When I'm not coding, you can find me playing basketball, video games, or riding motorcycles.</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <img src="/profile.jpg?v=1" alt="Elijah's Photo" class="profile-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Tab -->
+        <div id="skills-tab" class="tab-content" style="display:none;">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-4 text-center mb-4">
+                        <i class="fas fa-code fa-5x text-primary mb-3"></i>
+                    </div>
+                    <div class="col-md-8">
+                        <h1 class="mb-4">Skills & Interests</h1>
+                        <h5 class="text-muted mb-4">I'm passionate about technology and continuously learning new skills in software engineering.</h5>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h4><i class="fas fa-laptop-code text-primary me-2"></i>Programming Languages</h4>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">Python</li>
+                                    <li class="list-group-item">Java</li>
+                                    <li class="list-group-item">JavaScript</li>
+                                    <li class="list-group-item">HTML/CSS</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h4><i class="fas fa-tools text-success me-2"></i>Technologies</h4>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">AWS Cloud Services</li>
+                                    <li class="list-group-item">Wireshark</li>
+                                    <li class="list-group-item">Bootstrap</li>
+                                    <li class="list-group-item">Git/GitHub</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <p class="mt-4">I'm particularly interested in Artificial Intelligence, cloud computing, and software architecture. I enjoy working on projects that combine creativity with technical problem-solving, and I'm always eager to learn about emerging technologies and best practices in software development.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Survey Tab -->
+        <div id="survey-tab" class="tab-content" style="display:none;">
+            <div class="container mt-5">
+                <!-- Greeting Section -->
+                <div id="greeting-section" class="greeting-message">
+                    <h2 id="greeting-text">Welcome to SWE642 Survey</h2>
+                    <p id="greeting-subtext">Please enter your information below.</p>
+                </div>
+
+                <!-- Survey Form -->
+                <div class="form-section">
+                    <h2 class="mb-4"><i class="fas fa-poll me-2"></i>Student Survey Form</h2>
+                    <form id="surveyForm">
+                        <!-- Personal Information Section -->
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <h4 class="text-primary mb-3">Personal Information</h4>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="name" placeholder="Enter your full name" required>
+                                <div id="name-error" class="error-message"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" id="email" placeholder="your.email@example.com" required>
+                                <div id="email-error" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="telephone" class="form-label">Telephone Number</label>
+                                <input type="tel" class="form-control" id="telephone" placeholder="(XXX) XXX-XXXX">
+                            </div>
+                        </div>
+
+                        <!-- Address Section -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="street" class="form-label">Street Address <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="street" placeholder="123 Main Street" required>
+                                <div id="street-error" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="zipcode" class="form-label">Zip Code <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="zipcode" placeholder="22030" onblur="lookupZipcode()" required>
+                                <span id="zipcode-message"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="city" class="form-label">City</label>
+                                <div id="city" class="output-field">---</div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="state" class="form-label">State</label>
+                                <div id="state" class="output-field">---</div>
+                            </div>
+                        </div>
+
+                        <!-- Survey Questions Section -->
+                        <div class="row mb-4 mt-5">
+                            <div class="col-md-12">
+                                <h4 class="text-primary mb-3">Survey Questions</h4>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">What did you like most about the campus? <span class="text-danger">* (Select at least 2)</span></label>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="students" id="students">
+                                    <label class="form-check-label" for="students">Students</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="location" id="location">
+                                    <label class="form-check-label" for="location">Location</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="campus" id="campus">
+                                    <label class="form-check-label" for="campus">Campus</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="atmosphere" id="atmosphere">
+                                    <label class="form-check-label" for="atmosphere">Atmosphere</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="dorm-rooms" id="dorm-rooms">
+                                    <label class="form-check-label" for="dorm-rooms">Dorm Rooms</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input campus-checkbox" type="checkbox" value="sports" id="sports">
+                                    <label class="form-check-label" for="sports">Sports</label>
+                                </div>
+                                <div id="checkbox-error" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label class="form-label">How did you become interested in the university? <span class="text-danger">*</span></label>
+                                <div class="form-check">
+                                    <input class="form-check-radio" type="radio" name="interest" value="friends" id="friends">
+                                    <label class="form-check-label" for="friends">Friends</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-radio" type="radio" name="interest" value="television" id="television">
+                                    <label class="form-check-label" for="television">Television</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-radio" type="radio" name="interest" value="internet" id="internet">
+                                    <label class="form-check-label" for="internet">Internet</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-radio" type="radio" name="interest" value="other" id="other">
+                                    <label class="form-check-label" for="other">Other</label>
+                                </div>
+                                <div id="radio-error" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="recommend" class="form-label">Likelihood of recommending this school to other prospective students?</label>
+                                <select class="form-select" id="recommend">
+                                    <option value="">-- Select --</option>
+                                    <option value="very-likely">Very Likely</option>
+                                    <option value="likely">Likely</option>
+                                    <option value="unlikely">Unlikely</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Data Analysis Section -->
+                        <div class="row mb-4 mt-5">
+                            <div class="col-md-12">
+                                <h4 class="text-primary mb-3">Data Analysis</h4>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="data" class="form-label">Data <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="data" placeholder="Enter 10 comma-separated numbers (1-100)" onblur="calculateStats()" required>
+                                <small class="form-text text-muted">Example: 45, 67, 23, 89, 12, 56, 78, 34, 90, 45</small>
+                                <div id="data-error" class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Average</label>
+                                <div id="average" class="output-field">---</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Maximum</label>
+                                <div id="maximum" class="output-field">---</div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Comments -->
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="comments" class="form-label">Additional Comments</label>
+                                <textarea class="form-control" id="comments" rows="4" placeholder="Please share any additional feedback..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Form Buttons -->
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary btn-lg me-3"><i class="fas fa-paper-plane me-2"></i>Submit Survey</button>
+                                <button type="reset" class="btn btn-secondary btn-lg" onclick="resetForm()"><i class="fas fa-redo me-2"></i>Reset</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Tab -->
+        <div id="contact-tab" class="tab-content" style="display:none;">
+            <div class="container mt-5">
+                <div class="text-center mb-5">
+                    <h1 class="display-4 mb-4">Get In Touch</h1>
+                    <p class="lead">"If everyone worked as hard as me, I wouldn't have a job" - Steve Nash</p>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body text-center p-5">
+                                <h3 class="mb-4">Contact Information</h3>
+                                <div class="mb-4">
+                                    <a href="mailto:eoliver9@gmu.edu" class="btn btn-outline-primary btn-lg me-3">
+                                        <i class="fas fa-envelope me-2"></i>Email Me
+                                    </a>
+                                </div>
+                                <div class="social-links">
+                                    <a href="https://github.com/Oliverett" class="btn btn-outline-dark btn-lg me-2" target="_blank">
+                                        <i class="fab fa-github me-2"></i>GitHub
+                                    </a>
+                                    <a href="https://linkedin.com/in/elijah-oliver/" class="btn btn-outline-primary btn-lg" target="_blank">
+                                        <i class="fab fa-linkedin me-2"></i>LinkedIn
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <p class="mb-2">© 2024 Elijah Oliver. All Rights Reserved.</p>
+            <p>Powered by Bootstrap | Hosted on AWS S3</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // ==================== TAB NAVIGATION ====================
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            
+            // Update active nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // If showing survey tab, initialize greeting
+            if (tabName === 'survey') {
+                displayGreeting();
+            }
+        }
+
+        // ==================== COOKIE MANAGEMENT ====================
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+
+        function getGreeting() {
+            const hour = new Date().getHours();
+            if (hour < 12) {
+                return "Good Morning";
+            } else if (hour < 18) {
+                return "Good Afternoon";
+            } else {
+                return "Good Evening";
+            }
+        }
+
+        function displayGreeting() {
+            let userName = getCookie("userName");
+            
+            if (!userName) {
+                // No cookie set, prompt for name
+                userName = prompt("Welcome! Please enter your name:");
+                if (userName && userName.trim() !== "") {
+                    setCookie("userName", userName.trim(), 7); // Cookie expires in 7 days
+                } else {
+                    userName = "Guest";
+                }
+            }
+            
+            const greeting = getGreeting();
+            const greetingText = document.getElementById('greeting-text');
+            const greetingSubtext = document.getElementById('greeting-subtext');
+            
+            greetingText.innerHTML = `${greeting} ${userName}, welcome to SWE642 Survey`;
+            greetingSubtext.innerHTML = `Thank you for participating in our survey. <span class="change-name-link" onclick="changeName()">Not ${userName}? Click here to change.</span>`;
+        }
+
+        function changeName() {
+            const newName = prompt("Please enter your name:");
+            if (newName && newName.trim() !== "") {
+                setCookie("userName", newName.trim(), 7);
+                location.reload(); // Reload page to show new greeting
+            }
+        }
+
+        // ==================== DATA CALCULATION ====================
+        function calculateStats() {
+            const dataInput = document.getElementById('data').value.trim();
+            const dataError = document.getElementById('data-error');
+            
+            // Clear previous messages
+            dataError.textContent = '';
+            document.getElementById('average').textContent = '---';
+            document.getElementById('maximum').textContent = '---';
+            
+            if (dataInput === '') {
+                return;
+            }
+            
+            // Split by comma and parse numbers
+            const numbers = dataInput.split(',').map(s => s.trim()).filter(s => s !== '');
+            
+            // Validate: should have exactly 10 numbers
+            if (numbers.length !== 10) {
+                dataError.textContent = 'Error: Please enter exactly 10 comma-separated numbers.';
+                return;
+            }
+            
+            // Validate: all should be numbers between 1 and 100
+            const numArray = [];
+            for (let i = 0; i < numbers.length; i++) {
+                const num = parseFloat(numbers[i]);
+                if (isNaN(num) || num < 1 || num > 100) {
+                    dataError.textContent = 'Error: All values must be numbers between 1 and 100 (inclusive).';
+                    return;
+                }
+                numArray.push(num);
+            }
+            
+            // Calculate average and maximum
+            const sum = numArray.reduce((a, b) => a + b, 0);
+            const average = (sum / numArray.length).toFixed(2);
+            const maximum = Math.max(...numArray);
+            
+            // Display results
+            document.getElementById('average').textContent = average;
+            document.getElementById('maximum').textContent = maximum;
+        }
+
+        // ==================== AJAX ZIPCODE LOOKUP ====================
+        function lookupZipcode() {
+            const zipcode = document.getElementById('zipcode').value.trim();
+            const zipcodeMessage = document.getElementById('zipcode-message');
+            const cityDiv = document.getElementById('city');
+            const stateDiv = document.getElementById('state');
+            
+            // Clear previous data
+            zipcodeMessage.innerHTML = '';
+            cityDiv.textContent = '---';
+            stateDiv.textContent = '---';
+            
+            if (zipcode === '') {
+                return;
+            }
+            
+            // Create XMLHttpRequest
+            const xhr = new XMLHttpRequest();
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const data = JSON.parse(xhr.responseText);
+                            const zipcodes = data.zipcodes;
+                            
+                            // Find matching zipcode
+                            let found = false;
+                            for (let i = 0; i < zipcodes.length; i++) {
+                                if (zipcodes[i].zip === zipcode) {
+                                    cityDiv.textContent = zipcodes[i].city;
+                                    stateDiv.textContent = zipcodes[i].state;
+                                    zipcodeMessage.innerHTML = '<span class="success-message"><i class="fas fa-check-circle"></i> Valid</span>';
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            
+                            if (!found) {
+                                zipcodeMessage.innerHTML = '<span class="error-message"><i class="fas fa-times-circle"></i> Invalid zip</span>';
+                            }
+                        } catch (e) {
+                            console.error('Error parsing JSON:', e);
+                            zipcodeMessage.innerHTML = '<span class="error-message">Error loading data</span>';
+                        }
+                    } else {
+                        zipcodeMessage.innerHTML = '<span class="error-message">Error loading zipcode data</span>';
+                    }
+                }
+            };
+            
+            xhr.open('GET', 'zipcodes.json', true);
+            xhr.send();
+        }
+
+        // ==================== FORM VALIDATION ====================
+        function validateForm() {
+            let errors = [];
+            let fieldsToReset = [];
+            
+            // Validate Name (only alphabets and spaces)
+            const name = document.getElementById('name').value.trim();
+            const nameRegex = /^[a-zA-Z\s]+$/;
+            if (!name) {
+                errors.push('Name is required.');
+                fieldsToReset.push('name');
+            } else if (!nameRegex.test(name)) {
+                errors.push('Name should contain only alphabets.');
+                fieldsToReset.push('name');
+            }
+            
+            // Validate Email
+            const email = document.getElementById('email').value.trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email) {
+                errors.push('Email is required.');
+                fieldsToReset.push('email');
+            } else if (!emailRegex.test(email)) {
+                errors.push('Email address format is invalid.');
+                fieldsToReset.push('email');
+            }
+            
+            // Validate Street Address (alphanumeric)
+            const street = document.getElementById('street').value.trim();
+            const streetRegex = /^[a-zA-Z0-9\s,.-]+$/;
+            if (!street) {
+                errors.push('Street address is required.');
+                fieldsToReset.push('street');
+            } else if (!streetRegex.test(street)) {
+                errors.push('Street address should contain only appropriate alphanumeric characters.');
+                fieldsToReset.push('street');
+            }
+            
+            // Validate Checkboxes (at least 2 selected)
+            const checkboxes = document.querySelectorAll('.campus-checkbox:checked');
+            if (checkboxes.length < 2) {
+                errors.push('Please select at least two checkboxes for what you liked about the campus.');
+            }
+            
+            // Validate Radio Button (one must be selected)
+            const radioButtons = document.querySelectorAll('input[name="interest"]:checked');
+            if (radioButtons.length === 0) {
+                errors.push('Please select how you became interested in the university.');
+            }
+            
+            // Validate Data Field
+            const dataInput = document.getElementById('data').value.trim();
+            if (dataInput) {
+                const numbers = dataInput.split(',').map(s => s.trim()).filter(s => s !== '');
+                if (numbers.length !== 10) {
+                    errors.push('Data field must contain exactly 10 comma-separated numbers.');
+                    fieldsToReset.push('data');
+                } else {
+                    for (let i = 0; i < numbers.length; i++) {
+                        const num = parseFloat(numbers[i]);
+                        if (isNaN(num) || num < 1 || num > 100) {
+                            errors.push('Data field must contain numbers between 1 and 100 (inclusive).');
+                            fieldsToReset.push('data');
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            // If there are errors, show alert and clear problematic fields
+            if (errors.length > 0) {
+                alert('Please fix the following errors:\n\n' + errors.join('\n'));
+                
+                // Clear only the fields with errors
+                fieldsToReset.forEach(fieldId => {
+                    document.getElementById(fieldId).value = '';
+                });
+                
+                return false;
+            }
+            
+            // If validation passes
+            alert('Survey submitted successfully! Thank you for your feedback.');
+            return true;
+        }
+
+        // Form submit event handler
+        document.getElementById('surveyForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (validateForm()) {
+                // Here you would normally send data to server
+                console.log('Form validated and ready to submit');
+                // Optionally reset form after successful submission
+                // this.reset();
+                // resetForm();
+            }
+        });
+
+        // ==================== RESET FORM ====================
+        function resetForm() {
+            document.getElementById('surveyForm').reset();
+            document.getElementById('average').textContent = '---';
+            document.getElementById('maximum').textContent = '---';
+            document.getElementById('city').textContent = '---';
+            document.getElementById('state').textContent = '---';
+            document.getElementById('zipcode-message').innerHTML = '';
+            
+            // Clear all error messages
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.textContent = '');
+        }
+
+        // Initialize greeting when page loads if on survey tab
+        window.addEventListener('load', function() {
+            // Show home tab by default
+            showTab('home');
+        });
+    </script>
+</body>
+</html>
