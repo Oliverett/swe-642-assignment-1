@@ -2,7 +2,8 @@ pipeline {
   agent any
 
   environment {
-    IMAGE = "oliveret/swe642-assignment1:latest"
+    IMAGE_REPO = "oliveret/swe642-assignment1"
+    IMAGE_TAG = "${BUILD_NUMBER}"
   }
 
   stages {
@@ -12,7 +13,9 @@ pipeline {
 
     stage('Build Image') {
       steps {
-        sh 'docker build -t $IMAGE .'
+        sh '''
+          docker build -t ${IMAGE_REPO}:${IMAGE_TAG} -t ${IMAGE_REPO}:latest .
+        '''
       }
     }
 
@@ -21,7 +24,8 @@ pipeline {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
           sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker push $IMAGE
+            docker push ${IMAGE_REPO}:${IMAGE_TAG}
+            docker push ${IMAGE_REPO}:latest
           '''
         }
       }
@@ -29,8 +33,11 @@ pipeline {
 
     stage('Deploy to Kubernetes') {
       steps {
-        sh 'kubectl apply -f k8s-deployment.yaml'
-        sh 'kubectl rollout restart deployment/swe642-assignment1-deployment'
+        sh '''
+          kubectl apply -f k8s-deployment.yaml
+          kubectl set image deployment/swe642-assignment1-deployment swe642-assignment1=${IMAGE_REPO}:${IMAGE_TAG}
+          kubectl rollout status deployment/swe642-assignment1-deployment
+        '''
       }
     }
   }
