@@ -11,22 +11,18 @@ pipeline {
       steps { checkout scm }
     }
 
-    stage('Build Image') {
-      steps {
-        sh '''
-          docker build -t ${IMAGE_REPO}:${IMAGE_TAG} -t ${IMAGE_REPO}:latest .
-        '''
-      }
-    }
-
-    stage('Push Image') {
+    stage('Build and Push Multi-Arch Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh '''
+        sh '''
             echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
-            docker push ${IMAGE_REPO}:${IMAGE_TAG}
-            docker push ${IMAGE_REPO}:latest
-          '''
+            docker buildx create --use --name jxbuilder || true
+            docker buildx build \
+            --platform linux/amd64,linux/arm64 \
+            -t ${IMAGE_REPO}:${IMAGE_TAG} \
+            -t ${IMAGE_REPO}:latest \
+            --push .
+        '''
         }
       }
     }
