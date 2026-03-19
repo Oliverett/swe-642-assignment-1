@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>SWE642 Assignment 1 - Documentation</title>
+  <style>
+    body { font-family: Arial, Helvetica, sans-serif; line-height: 1.45; margin: 40px; color: #111; }
+    h1 { font-size: 26px; margin-bottom: 6px; }
+    h2 { font-size: 18px; margin-top: 28px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    pre { background: #f6f6f6; padding: 12px; border-radius: 6px; overflow-x: auto; }
+    .small { color: #333; font-size: 13px; }
+    .box { border: 1px solid #ddd; border-radius: 8px; padding: 14px; background: #fafafa; }
+  </style>
+</head>
+<body>
+  <h1>SWE642 Assignment 1</h1>
+  <div class="small">
+    Documentation for: Containerization (Docker), CI/CD (Jenkins), and Kubernetes Deployment (kubectl + Service resiliency).
+  </div>
+
+  <h2>1. What I built</h2>
+  <p>
+    I built a single-page portfolio and student survey web application (Homework 1 – Part 2). The application includes:
+  </p>
+  <ul>
+    <li>A tabbed interface (Home, About, Skills, Student Survey, Contact) using Bootstrap 5.</li>
+    <li>Cookie-based greeting for the Student Survey.</li>
+    <li>Student Survey form validation in JavaScript.</li>
+    <li>Zipcode lookup using an AJAX request to <code>zipcodes.json</code>.</li>
+    <li>Computed statistics (Average and Maximum) from 10 comma-separated numbers.</li>
+  </ul>
+  <p>
+    The app is containerized with Docker and deployed to Kubernetes using a Deployment (3 replicas for resiliency)
+    and a Service (LoadBalancer).
+  </p>
+
+  <h2>2. How it works (high-level architecture)</h2>
+  <div class="box">
+    <div><b>Developer machine</b></div>
+    <div class="small">Edits code locally and pushes to GitHub.</div>
+    <br/>
+    <div><b>Jenkins CI/CD pipeline</b></div>
+    <div class="small">Checks out code, builds a multi-arch Docker image, pushes it to Docker Hub, and redeploys to Kubernetes.</div>
+    <br/>
+    <div><b>Kubernetes cluster</b></div>
+    <div class="small">Runs 3 pods from the container image and exposes the app via a Service.</div>
+  </div>
+
+  <h2>3. Project files</h2>
+  <ul>
+    <li><code>index.html</code> - main website and survey UI</li>
+    <li><code>zipcodes.json</code> - data for zipcode lookup</li>
+    <li><code>profile.jpg</code> - image used in the About tab</li>
+    <li><code>Dockerfile</code> - builds an Nginx container that serves the static files</li>
+    <li><code>k8s-deployment.yaml</code> - Kubernetes Deployment + Service</li>
+    <li><code>Jenkinsfile</code> - Jenkins pipeline definition (build, push, deploy)</li>
+    <li><code>deploy.sh</code> / <code>deploy-ec2.sh</code> - supporting scripts used earlier for S3/EC2 static deployment</li>
+    <li><code>check-key.sh</code> - helper for EC2 SSH key validation</li>
+  </ul>
+
+  <h2>4. Containerization with Docker</h2>
+  <h3>4.1 Dockerfile behavior</h3>
+  <p>
+    The container uses <code>nginx:alpine</code>, removes the default Nginx HTML directory, and copies in:
+    <code>index.html</code>, <code>zipcodes.json</code>, and <code>profile.jpg</code>.
+  </p>
+
+  <h3>4.2 Local build and test</h3>
+  <pre><code>docker build -t swe642-assignment1 .
+docker run --rm -p 8080:80 swe642-assignment1</code></pre>
+  <p>Then open: <code>http://localhost:8080</code></p>
+
+  <h2>5. Docker Hub image tagging</h2>
+  <p>
+    The Jenkins pipeline pushes two tags each run:
+  </p>
+  <ul>
+    <li><code>oliveret/swe642-assignment1:${BUILD_NUMBER}</code></li>
+    <li><code>oliveret/swe642-assignment1:latest</code></li>
+  </ul>
+  <p class="small">
+    Using a unique build tag makes it easier to track which version is running in Kubernetes.
+  </p>
+
+  <h2>6. Kubernetes deployment with kubectl</h2>
+  <h3>6.1 Kubernetes resources</h3>
+  <p>
+    The file <code>k8s-deployment.yaml</code> defines:
+  </p>
+  <ul>
+    <li><b>Deployment</b>: <code>replicas: 3</code> to ensure resiliency.</li>
+    <li><b>Container port</b>: 80.</li>
+    <li><b>Service</b>: type <code>LoadBalancer</code> and forwards port 80 to the pods.</li>
+  </ul>
+
+  <h3>6.2 Apply and verify</h3>
+  <pre><code>kubectl apply -f k8s-deployment.yaml
+kubectl rollout status deployment/swe642-assignment1-deployment
+kubectl get pods -l app=swe642-assignment1
+kubectl get svc swe642-assignment1-service</code></pre>
+
+  <h3>6.3 Accessing the application</h3>
+  <p>
+    If <code>EXTERNAL-IP</code> remains pending (common for local clusters), use port-forward:
+  </p>
+  <pre><code>kubectl port-forward svc/swe642-assignment1-service 8081:80</code></pre>
+  <p>
+    Then open: <code>http://127.0.0.1:8081</code>
+  </p>
+  <h2>Rancher and EKS management</h2>
+  <p>
+    I imported my existing AWS EKS cluster into Rancher using the Rancher UI. Rancher is used to manage/monitor
+    the EKS cluster, while the Kubernetes Deployment and Service run the containerized application on EKS.
+  </p>
+  <p class="small">
+    If NodePort is available, the Service’s mapped port may also be usable (for example <code>80:31169</code>).
+  </p>
+
+  <h2>7. Resiliency requirement (3 pods)</h2>
+  <p>
+    Baseline configuration uses <code>replicas: 3</code> in the Deployment. If a pod is deleted, the ReplicaSet
+    creates a replacement automatically.
+  </p>
+  <h3>7.1 Resiliency test commands</h3>
+  <pre><code>kubectl get pods -l app=swe642-assignment1 -o wide
+kubectl delete pod &lt;one-pod-name&gt;
+kubectl get pods -l app=swe642-assignment1 -w</code></pre>
+
+  <h2>8. CI/CD pipeline with Jenkins</h2>
+  <h3>8.1 Jenkins installation (local)</h3>
+  <p>
+    Jenkins was installed using the downloaded <code>jenkins.war</code> and a supported Java runtime.
+    Jenkins is started with:
+  </p>
+  <pre><code>export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
+java -jar ~/Downloads/jenkins.war --httpPort=8080</code></pre>
+  <p>
+    Then open: <code>http://localhost:8080</code> and complete the setup wizard using the initial admin password.
+  </p>
+
+  <h3>8.2 Jenkins configuration</h3>
+  <ul>
+    <li><b>Credentials</b>: Added Docker Hub credentials in <b>Manage Jenkins → Credentials</b> with ID:
+      <code>dockerhub-creds</code>.</li>
+    <li><b>Pipeline job</b>: Created a Pipeline job pointing to the GitHub repository and using:
+      <code>Jenkinsfile</code>.</li>
+  </ul>
+
+  <h3>8.3 Jenkinsfile stages</h3>
+  <ul>
+    <li><b>Checkout</b>: Pull source from GitHub.</li>
+    <li><b>Build and Push Multi-Arch Image</b>:
+      <ul>
+        <li>Logs into Docker Hub</li>
+        <li>Uses Docker Buildx to build for <code>linux/amd64</code> and <code>linux/arm64</code></li>
+        <li>Pushed image tags: build-number tag and <code>:latest</code></li>
+      </ul>
+    </li>
+    <li><b>Deploy to Kubernetes</b>:
+      <ul>
+        <li><code>kubectl apply -f k8s-deployment.yaml</code></li>
+        <li><code>kubectl set image</code> to update the deployment to the new build tag</li>
+        <li>Waits for rollout completion with <code>kubectl rollout status</code></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>9. Kubernetes deployment details (kubectl)</h2>
+  <p>
+    Deployment is updated by setting the container image in the Deployment spec and letting Kubernetes handle the
+    rolling update (while ensuring that desired replicas remain available).
+  </p>
+
+  <h2>10. What to include in the video demonstration</h2>
+  <ul>
+    <li>Show setup process (Docker + Jenkins + kubectl + project files).</li>
+    <li>Show Kubernetes deployment using kubectl.</li>
+    <li>Show CI/CD pipeline execution in Jenkins.</li>
+    <li>Show the running application on Kubernetes (via port-forward if needed).</li>
+    <li>Show the cloud URL or endpoint used during the recording:
+      <ul>
+        <li>When <code>EXTERNAL-IP</code> is pending, state the port-forward endpoint used (for example <code>http://127.0.0.1:8081</code>).</li>
+        <li>If NodePort/endpoint is available, open the mapped URL and show it in the browser.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>11. Submission package contents</h2>
+  <p>
+    Submit a single zipped package containing:
+  </p>
+  <ul>
+    <li>Source code</li>
+    <li><code>Dockerfile</code></li>
+    <li><code>Jenkinsfile</code></li>
+    <li>Kubernetes YAML files (at least <code>k8s-deployment.yaml</code>)</li>
+    <li>Any additional scripts used</li>
+    <li>This documentation file (save/open as Word or PDF)</li>
+  </ul>
+
+  <h2>Appendix: Quick command reference</h2>
+  <pre><code># Build local image
+docker build -t swe642-assignment1 .
+
+# Run locally
+docker run --rm -p 8080:80 swe642-assignment1
+
+# Deploy to Kubernetes
+kubectl apply -f k8s-deployment.yaml
+kubectl rollout status deployment/swe642-assignment1-deployment
+
+# Port-forward access
+kubectl port-forward svc/swe642-assignment1-service 8081:80</code></pre>
+</body>
+</html>
+
